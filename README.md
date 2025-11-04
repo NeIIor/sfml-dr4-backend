@@ -37,4 +37,4 @@ dr4::DR4Backend* backend = create_func();
 # Interface Standard
 
 This implementation follows the DR4 graphics interface standard defined in:
-https://github.com/NeIIor/zemax-gui-interface
+[https://github.com/NeIIor/zemax-gui-interface](https://github.com/NeIIor/zemax-gui-interface/tree/draft1)
