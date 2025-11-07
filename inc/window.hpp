@@ -47,6 +47,7 @@ private:
     dr4::MouseButton convertMouse(sf::Mouse::Button button);
 
     std::string title_;
+    dr4::Vec2f size_; 
     sf::RenderWindow sf_window_;
     std::vector<std::unique_ptr<dr4::Texture>> textures_;
     std::vector<std::unique_ptr<dr4::Image>> images_;

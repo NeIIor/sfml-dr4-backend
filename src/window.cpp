@@ -7,7 +7,7 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-Window::Window() : title_("SFML Window") {
+Window::Window() : title_("SFML Window"), size_({1600, 1000}) {  
 }
 
 Window::~Window() {
@@ -28,20 +28,24 @@ const std::string& Window::GetTitle() const {
 }
 
 dr4::Vec2f Window::GetSize() const {
-    auto size = sf_window_.getSize();
-    return {static_cast<float>(size.x), static_cast<float>(size.y)};
+    return size_; 
 }
 
 void Window::SetSize(const dr4::Vec2f& size) {
+    size_ = size;  
     if (sf_window_.isOpen()) {
         sf_window_.setSize(sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)));
+        auto sf_size = sf_window_.getSize();
+        size_ = {static_cast<float>(sf_size.x), static_cast<float>(sf_size.y)};
     }
 }
 
 void Window::Open() {
     if (!sf_window_.isOpen()) {
-        sf_window_.create(sf::VideoMode(1600, 1000), title_);
+        sf_window_.create(sf::VideoMode(static_cast<unsigned>(size_.x), static_cast<unsigned>(size_.y)), title_);
         sf_window_.setFramerateLimit(60);
+        auto sf_size = sf_window_.getSize();
+        size_ = {static_cast<float>(sf_size.x), static_cast<float>(sf_size.y)};
     }
 }
 
@@ -63,8 +67,7 @@ void Window::Draw(const dr4::Texture& texture, dr4::Vec2f pos) {
     const auto& concrete_texture = dynamic_cast<const Texture&>(texture);
     sf::Sprite sprite(concrete_texture.getRenderTexture().getTexture());
     
-    auto window_size = sf_window_.getSize();
-    float invertedY = window_size.y - pos.y - concrete_texture.GetHeight();
+    float invertedY = size_.y - pos.y - concrete_texture.GetHeight();
     
     sprite.setPosition(pos.x, invertedY);
     
@@ -110,7 +113,7 @@ std::optional<dr4::Event> Window::PollEvent() {
 
 dr4::Event Window::convertEvent(const sf::Event& sf_event) {
     dr4::Event event;
-    auto window_height = sf_window_.getSize().y;
+    auto window_height = size_.y;
     
     switch (sf_event.type) {
         case sf::Event::Closed:

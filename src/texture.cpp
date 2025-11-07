@@ -20,9 +20,7 @@ Texture::~Texture() {
 void Texture::SetSize(dr4::Vec2f size) {
     render_texture_.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
     sf::View view(sf::FloatRect(0, size.y, size.x, -size.y)); 
-    render_texture_.setView(view);
-    
-    std::cout << "Texture::SetSize - New size: " << size.x << " x " << size.y << std::endl;
+    render_texture_.setView(view);    
 }
 
 dr4::Vec2f Texture::GetSize() const {
