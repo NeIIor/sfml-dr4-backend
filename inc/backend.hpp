@@ -2,7 +2,7 @@
 
 #include "misc/dr4_ifc.hpp"
 
-class SFMLBackend : public dr4::DR4Backend {
+class Backend : public dr4::DR4Backend {
 public:
     const std::string& Name() const override;
     dr4::Window* CreateWindow() override;

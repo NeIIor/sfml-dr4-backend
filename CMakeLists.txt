@@ -12,16 +12,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(gui_interfaces)
 
-message(STATUS "Interfaces source dir: ${gui_interfaces_SOURCE_DIR}")
-
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SFML REQUIRED sfml-graphics sfml-window)
 
 add_library(sfml-backend SHARED
-    src/backend_impl.cpp
-    src/window_impl.cpp  
-    src/texture_impl.cpp
-    src/image_impl.cpp
+    src/backend.cpp
+    src/window.cpp  
+    src/texture.cpp
+    src/image.cpp
+    src/font.cpp      
+    src/rectangle.cpp 
+    src/text.cpp      
 )
 
 target_include_directories(sfml-backend PRIVATE 
