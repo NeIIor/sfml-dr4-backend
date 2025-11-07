@@ -6,9 +6,12 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <iostream>
 
 Texture::Texture() {
     render_texture_.create(1, 1);
+    sf::View view(sf::FloatRect(0, 1, 1, -1)); 
+    render_texture_.setView(view);
 }
 
 Texture::~Texture() {
@@ -16,6 +19,10 @@ Texture::~Texture() {
 
 void Texture::SetSize(dr4::Vec2f size) {
     render_texture_.create(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y));
+    sf::View view(sf::FloatRect(0, size.y, size.x, -size.y)); 
+    render_texture_.setView(view);
+    
+    std::cout << "Texture::SetSize - New size: " << size.x << " x " << size.y << std::endl;
 }
 
 dr4::Vec2f Texture::GetSize() const {
@@ -40,7 +47,10 @@ void Texture::Draw(const dr4::Rectangle& rect) {
     
     sf::RectangleShape shape;
     shape.setSize(sf::Vector2f(concrete_rect.getRect().size.x, concrete_rect.getRect().size.y));
-    shape.setPosition(concrete_rect.getRect().pos.x, concrete_rect.getRect().pos.y);
+    
+    float invertedY = GetHeight() - concrete_rect.getRect().pos.y - concrete_rect.getRect().size.y;
+    shape.setPosition(concrete_rect.getRect().pos.x, invertedY);
+    
     shape.setFillColor(sf::Color(
         concrete_rect.getFill().r, 
         concrete_rect.getFill().g, 
@@ -71,7 +81,10 @@ void Texture::Draw(const dr4::Text& text) {
         sf_text.setFont(*default_font_);
     }
     sf_text.setCharacterSize(static_cast<unsigned>(concrete_text.getFontSize()));
-    sf_text.setPosition(concrete_text.getPos().x, concrete_text.getPos().y);
+    
+    float invertedY = GetHeight() - concrete_text.getPos().y - concrete_text.getFontSize();
+    
+    sf_text.setPosition(concrete_text.getPos().x, invertedY);
     sf_text.setFillColor(sf::Color(
         concrete_text.getColor().r,
         concrete_text.getColor().g, 
@@ -86,14 +99,16 @@ void Texture::Draw(const dr4::Text& text) {
 void Texture::Draw(const dr4::Image& img, const dr4::Vec2f& pos) {
     const auto& concrete_img = dynamic_cast<const Image&>(img);
     sf::RenderStates states;
-    states.transform.translate(pos.x, pos.y);
+    float invertedY = GetHeight() - pos.y - concrete_img.GetSize().y;
+    states.transform.translate(pos.x, invertedY);
     render_texture_.draw(concrete_img.getVertices(), states);
 }
 
 void Texture::Draw(const dr4::Texture& texture, const dr4::Vec2f& pos) {
     const auto& concrete_texture = dynamic_cast<const Texture&>(texture);
     sf::Sprite sprite(concrete_texture.render_texture_.getTexture());
-    sprite.setPosition(pos.x, pos.y);
+    float invertedY = GetHeight() - pos.y - concrete_texture.GetHeight();
+    sprite.setPosition(pos.x, invertedY);
     render_texture_.draw(sprite);
 }
 

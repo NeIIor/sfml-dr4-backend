@@ -64,9 +64,9 @@ void Window::Draw(const dr4::Texture& texture, dr4::Vec2f pos) {
     sf::Sprite sprite(concrete_texture.getRenderTexture().getTexture());
     
     auto window_size = sf_window_.getSize();
-    auto texture_size = concrete_texture.getRenderTexture().getTexture().getSize();
+    float invertedY = window_size.y - pos.y - concrete_texture.GetHeight();
     
-    sprite.setPosition(pos.x, window_size.y - pos.y - texture_size.y);
+    sprite.setPosition(pos.x, invertedY);
     
     sf_window_.draw(sprite);
 }
@@ -110,6 +110,7 @@ std::optional<dr4::Event> Window::PollEvent() {
 
 dr4::Event Window::convertEvent(const sf::Event& sf_event) {
     dr4::Event event;
+    auto window_height = sf_window_.getSize().y;
     
     switch (sf_event.type) {
         case sf::Event::Closed:
@@ -135,7 +136,7 @@ dr4::Event Window::convertEvent(const sf::Event& sf_event) {
             event.mouseButton.button = convertMouse(sf_event.mouseButton.button);
             event.mouseButton.pos = {
                 static_cast<float>(sf_event.mouseButton.x), 
-                static_cast<float>(sf_event.mouseButton.y)
+                static_cast<float>(window_height - sf_event.mouseButton.y)
             };
             break;
         }
@@ -145,7 +146,7 @@ dr4::Event Window::convertEvent(const sf::Event& sf_event) {
             event.mouseButton.button = convertMouse(sf_event.mouseButton.button);
             event.mouseButton.pos = {
                 static_cast<float>(sf_event.mouseButton.x), 
-                static_cast<float>(sf_event.mouseButton.y)
+                static_cast<float>(window_height - sf_event.mouseButton.y)
             };
             break;
         }
@@ -154,7 +155,7 @@ dr4::Event Window::convertEvent(const sf::Event& sf_event) {
             event.type = dr4::Event::Type::MOUSE_MOVE;
             event.mouseMove.pos = {
                 static_cast<float>(sf_event.mouseMove.x), 
-                static_cast<float>(sf_event.mouseMove.y)
+                static_cast<float>(window_height - sf_event.mouseMove.y)
             };
             event.mouseMove.rel = {0.0f, 0.0f};
             break;
@@ -165,7 +166,7 @@ dr4::Event Window::convertEvent(const sf::Event& sf_event) {
             event.mouseWheel.delta = static_cast<int>(sf_event.mouseWheelScroll.delta);
             event.mouseWheel.pos = {
                 static_cast<float>(sf_event.mouseWheelScroll.x), 
-                static_cast<float>(sf_event.mouseWheelScroll.y)
+                static_cast<float>(window_height - sf_event.mouseWheelScroll.y)
             };
             break;
         }
