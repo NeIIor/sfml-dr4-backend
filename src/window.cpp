@@ -7,10 +7,16 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-Window::Window() : title_("SFML Window"), size_({1600, 1000}) {  
+Window::Window() : title_("SFML Window"), size_({1600, 1000}) {
 }
 
 Window::~Window() {
+    for (auto* texture : textures_) delete texture;
+    for (auto* image : images_) delete image;
+    for (auto* font : fonts_) delete font;
+    for (auto* rect : rectangles_) delete rect;
+    for (auto* text : texts_) delete text;
+
     if (sf_window_.isOpen()) {
         sf_window_.close();
     }
@@ -28,11 +34,11 @@ const std::string& Window::GetTitle() const {
 }
 
 dr4::Vec2f Window::GetSize() const {
-    return size_; 
+    return size_;
 }
 
 void Window::SetSize(const dr4::Vec2f& size) {
-    size_ = size;  
+    size_ = size;
     if (sf_window_.isOpen()) {
         sf_window_.setSize(sf::Vector2u(static_cast<unsigned>(size.x), static_cast<unsigned>(size.y)));
         auto sf_size = sf_window_.getSize();
@@ -79,28 +85,33 @@ void Window::Display() {
 }
 
 dr4::Texture* Window::CreateTexture() {
-    textures_.push_back(std::make_unique<Texture>());
-    return textures_.back().get();
+    auto* texture = new Texture();
+    textures_.push_back(texture);
+    return texture;
 }
 
 dr4::Image* Window::CreateImage() {
-    images_.push_back(std::make_unique<Image>());
-    return images_.back().get();
+    auto* image = new Image();
+    images_.push_back(image);
+    return image;
 }
 
 dr4::Font* Window::CreateFont() {
-    fonts_.push_back(std::make_unique<Font>());
-    return fonts_.back().get();
+    auto* font = new Font();
+    fonts_.push_back(font);
+    return font;
 }
 
 dr4::Rectangle* Window::CreateRectangle() {
-    rectangles_.push_back(std::make_unique<Rectangle>());
-    return rectangles_.back().get();
+    auto* rect = new Rectangle();
+    rectangles_.push_back(rect);
+    return rect;
 }
 
 dr4::Text* Window::CreateText() {
-    texts_.push_back(std::make_unique<Text>());
-    return texts_.back().get();
+    auto* text = new Text();
+    texts_.push_back(text);
+    return text;
 }
 
 std::optional<dr4::Event> Window::PollEvent() {

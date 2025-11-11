@@ -4,7 +4,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Window/Mouse.hpp>
-#include <memory>
 #include <vector>
 
 class Texture;
@@ -47,11 +46,11 @@ private:
     dr4::MouseButton convertMouse(sf::Mouse::Button button);
 
     std::string title_;
-    dr4::Vec2f size_; 
+    dr4::Vec2f size_;
     sf::RenderWindow sf_window_;
-    std::vector<std::unique_ptr<dr4::Texture>> textures_;
-    std::vector<std::unique_ptr<dr4::Image>> images_;
-    std::vector<std::unique_ptr<dr4::Font>> fonts_;
-    std::vector<std::unique_ptr<dr4::Rectangle>> rectangles_;
-    std::vector<std::unique_ptr<dr4::Text>> texts_;
+    std::vector<dr4::Texture*> textures_;
+    std::vector<dr4::Image*> images_;
+    std::vector<dr4::Font*> fonts_;
+    std::vector<dr4::Rectangle*> rectangles_;
+    std::vector<dr4::Text*> texts_;
 };
